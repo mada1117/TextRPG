@@ -57,9 +57,6 @@ namespace TextRPG
 
         static void Main(string[] args)
         {
-            player1.Inventory.Add(new Item { Name = "무쇠갑옷", Defense = 9, Description = "무쇠로 만들어져 튼튼한 갑옷입니다.", IsEquipped = true });
-            player1.Inventory.Add(new Item { Name = "스파르타의 창", Attack = 7, Description = "스파르타의 전사들이 사용했다는 전설의 창입니다.", IsEquipped = true });
-
 
             // 게임 시작화면
             Console.Title = "==== 스파르타 던전 ====";
@@ -77,6 +74,9 @@ namespace TextRPG
                 Console.Write(">> ");
                 string playerName = Console.ReadLine();
                 player1 = new Player1(playerName);
+                player1.Inventory.Add(new Item { Name = "무쇠갑옷", Defense = 9, Description = "무쇠로 만들어져 튼튼한 갑옷입니다.", IsEquipped = true });
+                player1.Inventory.Add(new Item { Name = "스파르타의 창", Attack = 7, Description = "스파르타의 전사들이 사용했다는 전설의 창입니다.", IsEquipped = true });
+
                 VillageUI();
             }
             else
@@ -152,7 +152,7 @@ namespace TextRPG
                     Console.WriteLine($"이름: {player1.Name} ( 직업: {player1.Job} )");
                     // 공격력에서 착용 장비의 공격력이 얼마나 더해졌는지 표시
                     Console.WriteLine($"공격력 : {player1.BaseAttack + bonusAtk} ({(bonusAtk >= 0 ? "+" : "")}{bonusAtk})");
-                    Console.WriteLine($"방어력 : {player1.BaseDefense + bonusDef} ({(bonusAtk >= 0 ? "+" : "")}{bonusAtk})");
+                    Console.WriteLine($"방어력 : {player1.BaseDefense + bonusDef} ({(bonusDef >= 0 ? "+" : "")}{bonusDef})");
                     Console.WriteLine($"체 력 : {player1.Hp}");
                     Console.WriteLine($"Gold : {player1.Gold} G");
 
@@ -177,8 +177,69 @@ namespace TextRPG
                     Console.Title = "인벤토리";
                     Console.WriteLine("\n인벤토리");
                     Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.\n");
-                    Console.WriteLine("[아이템 목록]");
+                    if (player1.Inventory.Count == 0)
+                    {
+                        Console.WriteLine("아이템이 없습니다.");
+                    }
+                    else
+                    {
+                        foreach (var item in player1.Inventory)
+                        {
+                            string equipMark = item.IsEquipped ? "[E]" : "   ";
+                            Console.WriteLine($"- {equipMark}{item.Name} | 공격력 +{item.Attack} / 방어력 +{item.Defense} | {item.Description}");
+                        }
+                    }
 
+                    Console.WriteLine("\n1. 장착 관리");
+                    Console.WriteLine("0. 나가기");
+                    Console.Write("원하시는 행동을 입력해주세요.\n>> ");
+                    string input = Console.ReadLine();
+
+                    if (input == "1") ManageEquipment();
+                    else if (input == "0") break;
+                    else
+                    {
+                        Console.WriteLine("잘못된 입력입니다.");
+                        Console.ReadKey();
+                    }
+                }
+            }
+
+            static void ManageEquipment()
+            {
+                while (true)
+                {
+                    Console.Clear();
+                    Console.WriteLine("인벤토리 - 장착 관리");
+                    Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.\n");
+
+                    Console.WriteLine("[아이템 목록]");
+                    for (int i = 0; i < player1.Inventory.Count; i++)
+                    {
+                        var item = player1.Inventory[i];
+                        string equipMark = item.IsEquipped ? "[E]" : "   ";
+                        Console.WriteLine($"- {i + 1} {equipMark}{item.Name} | 공격력 +{item.Attack} / 방어력 +{item.Defense} | {item.Description}");
+                    }
+
+                    Console.WriteLine("\n0. 나가기");
+                    Console.Write("원하시는 행동을 입력해주세요.\n>> ");
+                    string input = Console.ReadLine();
+
+                    if (input == "0") break;
+
+                    if (int.TryParse(input, out int idx) && idx >= 1 && idx <= player1.Inventory.Count)
+                    {
+                        var item = player1.Inventory[idx - 1];
+                        item.IsEquipped = !item.IsEquipped;
+                        Console.WriteLine($"\n'{item.Name}' 아이템을 {(item.IsEquipped ? "장착" : "해제")}했습니다.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("\n잘못된 입력입니다.");
+                    }
+
+                    Console.WriteLine("계속하려면 아무 키나 누르세요...");
+                    Console.ReadKey();
                 }
             }
 
@@ -201,11 +262,18 @@ namespace TextRPG
                         Console.WriteLine($"- {i + 1} {item.Name} | {(item.Attack > 0 ? $"공격력 +{item.Attack}" : $"방어력 +{item.Defense}")} | {item.Description} |  {priceLabel}");
                     }
 
+                    Console.WriteLine("\n1. 아이템 구매");
                     Console.WriteLine("\n0. 나가기");
                     Console.Write("원하시는 행동을 입력해주세요.\n>> ");
                     string input = Console.ReadLine();
 
-                    if (input == "0") break;
+                    if (input == "1") PurchaseItem();
+                    else if (input == "0") break;
+                    else
+                    {
+                        Console.WriteLine("잘못된 입력입니다.");
+                        Console.ReadKey();
+                    }
                 }
             }
 
