@@ -13,6 +13,7 @@ namespace TextRPG
         public int Defense { get; set; } = 5;
         public int Hp { get; set; } = 100;
         public int Gold { get; set; } = 1500;
+                public List<Item> Inventory { get; set; } = new List<Item>();
 
         public Player1(string name)
         {
@@ -21,12 +22,21 @@ namespace TextRPG
     }
     class Item
     {
-
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public int Attack { get; set; }
+        public int Defense { get; set; }
+        public bool IsEquipped { get; set; } = false;
     }
 
     class StoreItem
-    {
-
+    {   
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public int Attack { get; set; }
+        public int Defense { get; set; }
+        public int Price { get; set; }
+        public bool IsSold { get; set; } = false;
     }
 
 
@@ -34,8 +44,24 @@ namespace TextRPG
     {
         static Player1 player1;
 
+        static List<StoreItem> storeItems = new List<StoreItem>
+        {
+        new StoreItem { Name = "수련자 갑옷", Defense = 5, Description = "수련에 도움을 주는 갑옷입니다.", Price = 1000 },
+        new StoreItem { Name = "무쇠갑옷", Defense = 9, Description = "무쇠로 만들어져 튼튼한 갑옷입니다.", Price = 1200, IsSold = true },
+        new StoreItem { Name = "스파르타의 갑옷", Defense = 15, Description = "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.", Price = 3500 },
+        new StoreItem { Name = "낡은 검", Attack = 2, Description = "쉽게 볼 수 있는 낡은 검 입니다.", Price = 600 },
+        new StoreItem { Name = "청동 도끼", Attack = 5, Description = "어디선가 사용됐던거 같은 도끼입니다.", Price = 1500 },
+        new StoreItem { Name = "스파르타의 창", Attack = 7, Description = "스파르타의 전사들이 사용했다는 전설의 창입니다.", Price = 2000, IsSold = true }
+        };
+
+
+
         static void Main(string[] args)
         {
+            player1.Inventory.Add(new Item { Name = "무쇠갑옷", Defense = 9, Description = "무쇠로 만들어져 튼튼한 갑옷입니다.", IsEquipped = true });
+            player1.Inventory.Add(new Item { Name = "스파르타의 창", Attack = 7, Description = "스파르타의 전사들이 사용했다는 전설의 창입니다.", IsEquipped = true });
+
+
             // 게임 시작화면
             Console.Title = "==== 스파르타 던전 ====";
             Console.WriteLine("\n==== 스파르타 던전 ====");
@@ -133,24 +159,41 @@ namespace TextRPG
 
             static void InventoryUi()
             {
-                Console.Clear();
-                Console.Title = "인벤토리";
-                Console.WriteLine("\n인벤토리");
-                Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.\n");
-                Console.WriteLine("[아이템 목록]");
+                while (true)
+                {
+                    Console.Clear();
+                    Console.Title = "인벤토리";
+                    Console.WriteLine("\n인벤토리");
+                    Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.\n");
+                    Console.WriteLine("[아이템 목록]");
+                }
             }
 
             static void StoreUi()
             {
-                Console.Clear();
-                Console.Title = "상점";
-                Console.WriteLine("\n상점");
-                Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.\n");
+                while (true)
+                {
+                    Console.Clear();
+                    Console.Title = "상점";
+                    Console.WriteLine("\n상점");
+                    Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.\n");
 
-                Console.WriteLine("[보유 골드]");
+                    Console.WriteLine($"[보유 골드] : {player1.Gold}");
 
-                Console.WriteLine("[아이템 목록]");
+                    Console.WriteLine("[아이템 목록]");
+                    for (int i = 0; i < storeItems.Count; i++)
+                    {
+                        var item = storeItems[i];
+                        string priceLabel = item.IsSold ? "구매완료" : $"{item.Price} G";
+                        Console.WriteLine($"- {i + 1} {item.Name} | {(item.Attack > 0 ? $"공격력 +{item.Attack}" : $"방어력 +{item.Defense}")} | {item.Description} |  {priceLabel}");
+                    }
 
+                    Console.WriteLine("\n0. 나가기");
+                    Console.Write("원하시는 행동을 입력해주세요.\n>> ");
+                    string input = Console.ReadLine();
+
+                    if (input == "0") break;
+                }
             }
 
         }
