@@ -7,22 +7,6 @@ namespace TextRPG
     {
         static void Main(string[] args)
         {
-            /* 플레이어가 정보를 입력하는 것은 일단 보류
-            Console.Title = "스파르타 던젼";
-            Console.WriteLine("스파르타 던젼에 오신 여러분을 환영합니다.");
-            Console.WriteLine("원하시는 이름을 설정해주세요.");
-
-            Console.Write(">> ");
-            string playerName = Console.ReadLine();
-
-            Console.WriteLine("\n직업을 선택해주세요. (선택지: 전사, 도적)");
-            Console.Write(">> ");
-            string playerJob = Console.ReadLine();
-
-            Console.WriteLine($"\n환영합니다, {playerName}님! 모험을 시작합니다...");
-            */
-
-
             // 게임 시작화면
             Console.Title = "==== 스파르타 던전 ====";
             Console.WriteLine("\n==== 스파르타 던전 ====");
@@ -35,6 +19,11 @@ namespace TextRPG
             if (startChoice.ToUpper() == "Y")
             {
                 Console.Clear();
+                Console.WriteLine("\n여정을 시작할 당신의 이름은 무엇입니까?");
+                Console.Write(">> ");
+                string playerName = Console.ReadLine();
+                Console.Clear();
+                Console.WriteLine($"\n환영합니다, {playerName}님! 모험을 시작합니다...");
                 VillageUI();
             }
             else
@@ -46,43 +35,62 @@ namespace TextRPG
 
             static void VillageUI()
             {
-                // 메뉴 출력
-                Console.Title = "스파르타 마을";
-                Console.WriteLine("\n이 곳은 스파르타 마을. 던전에 들어가기 전 준비를 할 수 있습니다\n");
-                Console.WriteLine("1. 상태 보기");
-                Console.WriteLine("2. 인벤토리");
-                Console.WriteLine("3. 상점\n");
-
-                Console.WriteLine("원하시는 행동을 입력해주세요.");
-                Console.Write(">> ");
-
-                string input = Console.ReadLine();
-
-                Console.WriteLine(); // 줄바꿈
-
-                // 입력 처리
-                switch (input)
+                while (true)
                 {
-                    case "1":
-                        Console.WriteLine("[상태 보기]를 선택하셨습니다.");
-                        // 상태 보기 코드 작성 예정
-                        break;
+                    Console.Clear();
+                    Console.Title = "스파르타 마을";
+                    Console.WriteLine("\n이 곳은 스파르타 마을. 던전에 들어가기 전 준비를 할 수 있습니다\n");
+                    Console.WriteLine("1. 상태 보기");
+                    Console.WriteLine("2. 인벤토리");
+                    Console.WriteLine("3. 상점\n");
 
-                    case "2":
-                        Console.WriteLine("[인벤토리]를 선택하셨습니다.");
-                        // 인벤토리 코드 작성 예정
-                        break;
+                    Console.WriteLine("원하시는 행동을 숫자로 입력해주세요.");
+                    Console.Write(">> ");
 
-                    case "3":
-                        Console.WriteLine("[상점]을 선택하셨습니다.");
-                        // 상점 코드 작성 예정
-                        break;
+                    string input = Console.ReadLine();
 
-                    default:
-                        Console.WriteLine("잘못된 입력입니다.");
-                        break;
+                    // 입력 처리
+                    switch (input)
+                    {
+                        case "1":
+                            Console.WriteLine("[상태 보기]를 선택하셨습니다.");
+                            StatusUi();
+                            break;
+
+                        case "2":
+                            Console.WriteLine("[인벤토리]를 선택하셨습니다.");
+                            InventoryUi();
+                            break;
+
+                        case "3":
+                            Console.WriteLine("[상점]을 선택하셨습니다.");
+                            StoreUi();
+                            break;
+
+                        default:
+                            Console.WriteLine("잘못된 입력입니다.");
+                            Console.WriteLine("\"계속하려면 아무 키나 누르세요...");
+                            Console.ReadKey();
+                            break;
+                    }
                 }
             }
+
+            static void StatusUi()
+            {
+
+            }
+
+            static void InventoryUi()
+            {
+
+            }
+
+            static void StoreUi()
+            {
+
+            }
+
         }
     }
 }
